@@ -1,7 +1,4 @@
-<?php 
-
-$batch = ''.
-'iyr:2010 ecl:gry hgt:181cm
+iyr:2010 ecl:gry hgt:181cm
 pid:591597745 byr:1920 hcl:#6b5442 eyr:2029 cid:123
 
 cid:223 byr:1927
@@ -1159,64 +1156,4 @@ iyr:2020 byr:1968
 ecl:gry
 eyr:2030 hcl:#1976b0
 cid:127 pid:701862616
-hgt:161cm'
-;
-
-
-$passports_str = explode(PHP_EOL.PHP_EOL, $batch);
-
-$valid = 0;
-foreach($passports_str as $passport_str){
-  $Passport = [];
-  $passport_str = str_replace(PHP_EOL, " ", $passport_str);
-  $pass_values  = explode(" ",$passport_str);
-  foreach($pass_values as $value_str){
-    list($name,$value) = explode(":",$value_str);
-    $Passport[$name] = $value;
-  }
-  
-  $valid += (isValid($Passport)?1:0);
-}
-echo $valid.PHP_EOL;
-
-function isValid($passport){
-  $fields_required = [
-    "byr" => function($value){ return ( $value <= 2002 && $value >= 1920 ); },
-    "iyr" => function($value){ return ( $value <= 2020 && $value >= 2010 ); },
-    "eyr" => function($value){ return ( $value <= 2030 && $value >= 2020 ); },
-    "hgt" => function($value){ 
-      $metric = substr($value,-2);
-      $val = substr($value,0,-2);
-      switch($metric){
-        case "cm":
-          return ($val <= 193 && $val >= 150 );
-        break;
-        case "in":
-          return ($val <= 79 && $val >= 59 );
-        break;
-      }
-      return false;
-     },
-    "hcl" => function($value){ 
-      return (bool) preg_match('/#[0-9a-f]{6}/', $value);
-     },
-    "ecl" => function($value){ 
-      return in_array($value,["amb","blu","brn","gry","grn","hzl","oth"]);
-     },
-    "pid" => function($value){ 
-      return (bool) preg_match('/[0-9]{9}/', $value);
-     },
-  ];
-  $fields_optional = [
-    "cid" => function($value){ return true;},
-  ];
-  
-  $result = array_diff_key($fields_required, $passport);
-  if(!empty($result)) return false;
-  
-  foreach($fields_required as $field_name => $isValidField){
-    if(!$isValidField($passport[$field_name])) return false;
-  }
-  return true;
-}
-
+hgt:161cm

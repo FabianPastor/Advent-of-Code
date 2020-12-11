@@ -12,10 +12,10 @@ $group_responses = explode(PHP_EOL.PHP_EOL, $input);
 $sum = 0;
 foreach($group_responses as $i => $responses_str){
   $votation = new Votation($responses_str);
+  $votes = $votation->countYesVotes();
   echo "Group {$i}".PHP_EOL;
-  echo " Total Voters: ".$votation->getNumberVoters().PHP_EOL;
-  echo " Total Answers: ".$votation->countYesVotes().PHP_EOL;
-  $sum += $votation->countYesVotes();
+  echo " Total Answers:  {$votes}".PHP_EOL;
+  $sum += $votes;
   echo PHP_EOL;
 }
 echo "Total number of answers that got voted Yes: {$sum}".PHP_EOL;
@@ -36,9 +36,6 @@ class Votation{
       }
     }
     $this->answers = $res;
-  }
-  public function getNumberVoters(){
-    return array_sum($this->answers);
   }
   public function countYesVotes(){
     return count($this->answers);

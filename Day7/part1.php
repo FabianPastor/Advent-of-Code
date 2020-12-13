@@ -2,7 +2,7 @@
 $example = "example_input.txt";
 $puzzle = "puzzle_input.txt";
 
-$filename = $puzzle;
+$filename = $example;
 
 $input = trim(file_get_contents($filename));
 
@@ -18,14 +18,18 @@ foreach($bagage_rules as $rule){
     echo $rule.PHP_EOL;
     echo $bag->print().PHP_EOL.PHP_EOL;
   }
-  
+  // var_dump($bag);
+  echo json_encode($bag).PHP_EOL;
   
   Bags::add($bag);
   if($bag->canContainBag($my_bagname)){
     $bagsCanContain[] = $bag->name;
   }
   
+  
+  
 }
+echo PHP_EOL;
 $not_checked = $bagsCanContain;
 $checked = [];
 while(!empty($not_checked)){
@@ -43,7 +47,7 @@ while(!empty($not_checked)){
   }
 }
 $checked = array_values(array_unique($checked));
-
+echo json_encode($checked).PHP_EOL;
 echo count(array_unique($checked))." - from - ".count(Bags::$all).PHP_EOL;
 
 
@@ -63,7 +67,7 @@ class Bags{
 class Bag{
   public $name;
   public $container = [];
-  public $containedBy = [];
+  //public $containedBy = [];
   
   
   public function __construct($rule){

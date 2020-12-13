@@ -6,7 +6,7 @@ $filename = $puzzle;
 
 $input = trim(file_get_contents($filename));
 
-echo "$input".PHP_EOL;
+//echo "$input".PHP_EOL;
 
 $places_lines = array_map("trim",explode(PHP_EOL, $input));
 
@@ -73,12 +73,13 @@ for($i = 0; $i <1000; $i++){
   
   
   
-  $last_final = $final;
   $final = "";
   
   foreach($places_new as $lines){
     $final .= implode("",$lines).PHP_EOL;
   }
+  
+  
   if($final == $last_final){
     echo "Stability at: $i".PHP_EOL;
     $occupied = 0;
@@ -96,5 +97,6 @@ for($i = 0; $i <1000; $i++){
     break;
   }
   
-  echo $final.PHP_EOL.PHP_EOL;
+  $last_final = $final;
+  //echo $final.PHP_EOL.PHP_EOL;
 }

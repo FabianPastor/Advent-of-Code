@@ -30,7 +30,7 @@ while($playing){
   // if($i >= 10){
   //   $playing = false;
   // }
-  if(($i+1) == 2020){
+  if(($i+1) == 30000000){
     $playing = false;
   }
   

@@ -17,7 +17,7 @@ arsort($buses, SORT_NATURAL);
 
 
  $ammount = 10000000000000000;
- $start   = 100000000000000;
+ $start   = 0;
 
 //Bruteforce: Eventyally we will arive there....
 echo searchNum($buses ,$start, $ammount).PHP_EOL;

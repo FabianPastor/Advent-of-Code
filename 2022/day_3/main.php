@@ -5,7 +5,7 @@ $inputs = array_map("trim",explode("\n",trim($input)));
 
 
 $rucksacks = [];
-$rucksacks["priorities"] = [
+$priorities = [
   "content" => [],
   "sum" => 0,
 ];
@@ -47,8 +47,8 @@ foreach($inputs as $index => $item){
         $rucksack["same"]["$char"] = getValue($char);
         if(!$priorityFound){
           $priorityFound = true;
-          $rucksacks["priorities"]["content"][] = $rucksack["same"]["$char"];
-          $rucksacks["priorities"]["sum"] += $rucksack["same"]["$char"];
+          $priorities["content"][] = $rucksack["same"]["$char"];
+          $priorities["sum"] += $rucksack["same"]["$char"];
         }
       }
     }else{
@@ -64,12 +64,66 @@ foreach($inputs as $index => $item){
   
 }
 
+$group = 0;
+$groups = [];
+$groups[0]["elements"] = [];
+$priorities = [
+  "content" => [],
+  "sum" => 0,
+];
+foreach($rucksacks as $index => $rucksack){
+  // var_dump($rucksack);
+  $current = &$groups[$group];
+  
+  $chars = str_split($rucksack["items"]);
+  $elements = [];
+  foreach($chars as $char){
+    if(!isset($elements[$char])){
+      $elements[$char] = 1;
+    }
+  }
+  
+  foreach($elements as $char => $amount){
+    if(!isset($current["elements"]["$char"])){
+      $current["elements"]["$char"] = 1;
+    }else{
+      $current["elements"]["$char"]++;
+    }
+  }
+  
+  
+  
+  
+  // $current[]
+  
+  
+  unset($current);
+  if($index%3===2){
+    
+    $char = array_search(3,$groups[$group]["elements"]);
+    $value = getValue($char);
+    $priorities["content"][] = $char;
+    $priorities["sum"] += $value;
+    
+    
+    // $priorities["sum"] 
+    
+    
+    
+    
+    
+    $group++;
+    $groups[$group]["elements"] = [];
+  }
+}
+unset($groups[$group]);
 
 // foreach($rucksacks as $rucksack){
 //   echo json_encode($rucksack).PHP_EOL;
 // }
-var_dump($rucksacks);
-echo "Number: ".$rucksacks["priorities"]["sum"].PHP_EOL;
+// var_dump($rucksacks,$priorities);
+// var_dump($groups);
+echo "Number: ".$priorities["sum"].PHP_EOL;
 
 function getValue(string $char):int{
   $ord = ord($char);

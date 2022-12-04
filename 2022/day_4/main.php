@@ -3,39 +3,26 @@
 require_once "../includes/functions.php";
 $inputs = array_map("trim",explode("\n",trim($input)));
 
-function isPartiallyContainedPart2($a, $b){
-  if(isFullyContainedPart1($a,$b)) return true;
-  return ( (($a[0] <= $b[0] && $b[0] <= $a[1]) && ($a[1] < $b[1])) ||
-           (($b[0] <= $a[0] && $a[0] <= $b[1]) && ($b[1] < $a[1]))  );
+function contains($e1, $e2){
+  return ( ($e1[0] <= $e2[0] && $e2[1] <= $e1[1]) );
+}
+function overlaps($e1, $e2){
+  if(contains($e1, $e2)) return true;
+  return ( (($e1[0] <= $e2[0] && $e2[0] <= $e1[1]) && ($e1[1] < $e2[1])) );
 }
 
-function isFullyContainedPart1($a, $b){
-  return ( ($a[0] <= $b[0] && $b[1] <= $a[1]) ||
-           ($b[0] <= $a[0] && $a[1] <= $b[1])  );
-}
-
+function P1($e1, $e2){ return contains($e1, $e2) || contains($e2, $e1); }
+function P2($e1, $e2){ return overlaps($e1, $e2) || overlaps($e2, $e1); }
 
 $assignementsP1 = 0;
 $assignementsP2 = 0;
 foreach($inputs as $pairedElfs){
-  [$elf1, $elf2] = explode(",",$pairedElfs);
-  [$elf1Min, $elf1Max] = explode("-",$elf1);
-  [$elf2Min, $elf2Max] = explode("-",$elf2);
+  $elfs = explode( ",", $pairedElfs );
+  $elf1 = explode( "-", $elfs[0] );
+  $elf2 = explode( "-", $elfs[1] );
   
-  if(isFullyContainedPart1(
-    [$elf1Min, $elf1Max],
-    [$elf2Min, $elf2Max]
-  )){
-    $assignementsP1++;
-  }
-  if(isPartiallyContainedPart2(
-    [$elf1Min, $elf1Max],
-    [$elf2Min, $elf2Max]
-  )){
-    $assignementsP2++;
-  }
+  if( P1($elf1, $elf2) ) $assignementsP1++;
+  if( P2($elf1, $elf2) ) $assignementsP2++;
 }
-echo "Assignements Part1: ".$assignementsP1.PHP_EOL;
-echo "Assignements Part2: ".$assignementsP2.PHP_EOL;
-
-
+echo "Assignements Part 1: ".$assignementsP1.PHP_EOL;
+echo "Assignements Part 2: ".$assignementsP2.PHP_EOL;

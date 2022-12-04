@@ -11,18 +11,16 @@ function overlaps($e1, $e2){
   return ( (($e1[0] <= $e2[0] && $e2[0] <= $e1[1]) && ($e1[1] < $e2[1])) );
 }
 
-function P1($e1, $e2){ return contains($e1, $e2) || contains($e2, $e1); }
-function P2($e1, $e2){ return overlaps($e1, $e2) || overlaps($e2, $e1); }
+function P1($e){ return contains([$e[0],$e[1]], [$e[2],$e[3]]) || contains([$e[2],$e[3]], [$e[0],$e[1]]); }
+function P2($e){ return overlaps([$e[0],$e[1]], [$e[2],$e[3]]) || overlaps([$e[2],$e[3]], [$e[0],$e[1]]); }
 
 $assignementsP1 = 0;
 $assignementsP2 = 0;
 foreach($inputs as $pairedElfs){
-  $elfs = explode( ",", $pairedElfs );
-  $elf1 = explode( "-", $elfs[0] );
-  $elf2 = explode( "-", $elfs[1] );
+  $elfs = explode( ",", str_replace("-",",",$pairedElfs) );
   
-  if( P1($elf1, $elf2) ) $assignementsP1++;
-  if( P2($elf1, $elf2) ) $assignementsP2++;
+  if( P1($elfs) ) $assignementsP1++;
+  if( P2($elfs) ) $assignementsP2++;
 }
 echo "Assignements Part 1: ".$assignementsP1.PHP_EOL;
 echo "Assignements Part 2: ".$assignementsP2.PHP_EOL;

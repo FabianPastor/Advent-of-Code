@@ -15,17 +15,27 @@ function isFullyContainedPart1($a, $b){
 }
 
 
-$assignements = 0;
+$assignementsP1 = 0;
+$assignementsP2 = 0;
 foreach($inputs as $pairedElfs){
   [$elf1, $elf2] = explode(",",$pairedElfs);
   [$elf1Min, $elf1Max] = explode("-",$elf1);
   [$elf2Min, $elf2Max] = explode("-",$elf2);
   
+  if(isFullyContainedPart1(
+    [$elf1Min, $elf1Max],
+    [$elf2Min, $elf2Max]
+  )){
+    $assignementsP1++;
+  }
   if(isPartiallyContainedPart2(
     [$elf1Min, $elf1Max],
     [$elf2Min, $elf2Max]
   )){
-    $assignements++;
+    $assignementsP2++;
   }
 }
-echo "Assignements: ".$assignements.PHP_EOL;
+echo "Assignements Part1: ".$assignementsP1.PHP_EOL;
+echo "Assignements Part2: ".$assignementsP2.PHP_EOL;
+
+

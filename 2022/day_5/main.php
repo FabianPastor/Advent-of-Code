@@ -1,70 +1,92 @@
 <?php
 //Contains the $input as string
 require_once "../includes/functions.php";
-// $inputs = array_map("trim",explode("\n",trim($input)));
-
+//Change some strings to easy process the data.
 $inputs = trim(str_replace(
   ["move "," from "," to ","    ","[","]"," "],
-  ["",",",","," [_]","","",""],
+  [""     ,","     ,","   ," [_]","" ,"" ,""],
 $input));
 
 [$table, $moves] = explode("\n\n",$inputs);
 
-echo $table.PHP_EOL;
+// echo $table.PHP_EOL;
 // echo $moves.PHP_EOL;
 
+//Create the stacks of crates
 $stacks = [];
 $lines = explode("\n",$table);
 $lines = array_reverse($lines);
 foreach($lines as $n => $line){
   if($n==0)continue;
-  $items = str_split($line);
-  foreach($items as $i => $item){
-    if(trim($item)=="_") continue;
-    $stacks[($i+1)][] = $item;
+  $crates = str_split($line);
+  foreach($crates as $i => $crate){
+    if(trim($crate)=="_") continue;
+    $stacks[($i+1)][] = $crate;
   }
 }
-// var_dump($stacks);
-printStack($stacks);
+echo "\nCrates: \n";
+printStacks($stacks);
 
+//Reorder the stacks with the movements specified
 $moves = explode("\n",$moves);
 
-//Part 1
-// foreach($moves as $move){
-//   [$n, $src, $dst] = explode(",", $move);
-//   // echo "From $src move to $dst: $n times\n";
-//   for($i=0;$i<$n;$i++){
-//     if($stackElement = array_pop($stacks[$src])){
-//       array_push($stacks[$dst], $stackElement);
-//     }
-//   }
-// }
+$stacksP1 = moveCratesP1($moves, $stacks);
+echo "\nCrates after moving Part1:\n";
+printStacks($stacksP1);
+echo "First Crates: ".getFirstCrates($stacksP1).PHP_EOL;
 
-//Part 2
-foreach($moves as $move){
-  [$n, $src, $dst] = explode(",", $move);
-  // echo "From $src move to $dst: $n times\n";
-  
-  if($elements = array_splice($stacks[$src],-$n)){
-    $stacks[$dst] = array_merge($stacks[$dst],$elements);
+$stacksP2 = moveCratesP2($moves, $stacks);
+echo "\nCrates after moving Part2:\n";
+printStacks($stacksP2);
+echo "First Crates: ".getFirstCrates($stacksP2).PHP_EOL;
+
+
+function moveCratesP1($moves, $stacks){
+  foreach($moves as $move){
+    [$n, $src, $dst] = explode(",", $move);
+    for($i=0; $i<$n; $i++){
+      if($crate = array_pop($stacks[$src])){
+        array_push($stacks[$dst], $crate);
+      }
+    }
   }
-
+  return $stacks;
 }
 
-
-foreach($stacks as $stack){
-  if($element = array_pop($stack)){
-    echo $element;
+function moveCratesP2($moves, $stacks){
+  foreach($moves as $move){
+    [$n, $src, $dst] = explode(",", $move);
+    if($crates = array_splice($stacks[$src],-$n)){
+      $stacks[$dst] = array_merge($stacks[$dst], $crates);
+    }
   }
+  return $stacks;
 }
-echo PHP_EOL;
-printStack($stacks);
 
+function getFirstCrates($stacks){
+  $str = "";
+  foreach($stacks as $stack){
+    if($crate = array_pop($stack)){
+      $str .= $crate;
+    }
+  }
+  return $str;
+}
 
-function printStack($stacks){
-  
+function printStacks($stacks){
+  $text = [];
+  $cols = count($stacks);
   foreach($stacks as $i => $stack){
-    echo "$i) ".implode(" ",$stack).PHP_EOL;
+    $text[0][$i] = " $i ";
+    foreach($stack as $j => $crate){
+      if(!isset($text[($j+1)][$i])){
+        $text[($j+1)] = array_fill(1,$cols,"   ");
+      }
+      $text[($j+1)][$i] = "[$crate]";
+    }
   }
-  
+  $text = array_reverse($text);
+  foreach($text as $strings){
+    echo implode(" ",$strings).PHP_EOL;
+  }
 }

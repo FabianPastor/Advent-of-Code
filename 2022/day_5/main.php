@@ -30,15 +30,27 @@ printStack($stacks);
 $moves = explode("\n",$moves);
 
 //Part 1
+// foreach($moves as $move){
+//   [$n, $src, $dst] = explode(",", $move);
+//   // echo "From $src move to $dst: $n times\n";
+//   for($i=0;$i<$n;$i++){
+//     if($stackElement = array_pop($stacks[$src])){
+//       array_push($stacks[$dst], $stackElement);
+//     }
+//   }
+// }
+
+//Part 2
 foreach($moves as $move){
   [$n, $src, $dst] = explode(",", $move);
   // echo "From $src move to $dst: $n times\n";
-  for($i=0;$i<$n;$i++){
-    if($stackElement = array_pop($stacks[$src])){
-      array_push($stacks[$dst], $stackElement);
-    }
+  
+  if($elements = array_splice($stacks[$src],-$n)){
+    $stacks[$dst] = array_merge($stacks[$dst],$elements);
   }
+
 }
+
 
 foreach($stacks as $stack){
   if($element = array_pop($stack)){
